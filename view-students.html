@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="SWATI - Modern Student Fee Management System">
+    <meta name="theme-color" content="#667eea">
+    <title>View Students - SWATI</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title"><i class="fas fa-graduation-cap"></i> SWATI</span>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.html" class="sidebar-link"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="add-student.html" class="sidebar-link"><i class="fas fa-user-plus"></i> <span>Add Student</span></a></li>
+                    <li><a href="view-students.html" class="sidebar-link active"><i class="fas fa-users"></i> <span>View Students</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="header">
+                <div class="app-title">
+                    <i class="fas fa-users"></i> View Students
+                </div>
+                <div class="app-subtitle">
+                    All students in the system
+                </div>
+            </div>
+            <div class="students-container">
+                <div class="students-header">
+                    <h2>All Students</h2>
+                    <div class="search-filter">
+                        <input type="text" id="search-students" placeholder="Search students...">
+                        <select id="filter-status">
+                            <option value="all">All Status</option>
+                            <option value="paid">Fees Paid</option>
+                            <option value="pending">Fees Pending</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="students-list" class="students-list">
+                    <p class="no-data">No students found</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div id="student-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user"></i> Student Details</h2>
+                <button id="close-modal" class="modal-close" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <!-- Student details will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div id="edit-student-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Student</h2>
+                <button id="close-edit-modal" class="modal-close" aria-label="Close edit modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-student-form" class="student-form">
+                    <input type="hidden" id="edit-student-id" name="id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-student-name">Full Name *</label>
+                            <input type="text" id="edit-student-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-student-age">Age *</label>
+                            <input type="number" id="edit-student-age" name="age" min="1" max="100" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-student-email">Email *</label>
+                            <input type="email" id="edit-student-email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-student-phone">Phone Number *</label>
+                            <input type="tel" id="edit-student-phone" name="phone" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-student-dob">Date of Birth *</label>
+                            <input type="date" id="edit-student-dob" name="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-student-joining">Joining Date *</label>
+                            <input type="date" id="edit-student-joining" name="joining" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-student-semester">Semester Duration (Months) *</label>
+                            <input type="number" id="edit-student-semester" name="semester" min="1" max="12" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-student-fees">Total Semester Fees (₹) *</label>
+                            <input type="number" id="edit-student-fees" name="fees" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="edit-student-address">Address *</label>
+                        <textarea id="edit-student-address" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Update Student
+                        </button>
+                        <button type="button" id="cancel-edit" class="btn btn-secondary">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-brand">
+                    <h3>SWATI</h3>
+                    <p>Student Fee Management System</p>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Developer</h4>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <strong>Name:</strong>
+                        <p>Lucky Longre</p>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Portfolio:</strong>
+                        <p><a href="https://shadowx-frontend.onrender.com" target="_blank">shadowx-frontend.onrender.com</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-bottom-content">
+                <div class="copyright">
+                    <p>&copy; 2024 SWATI. All rights reserved.</p>
+                </div>
+                <div class="footer-tech">
+                    <span>Built with HTML5, CSS3, JavaScript by Lucky Longre</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
