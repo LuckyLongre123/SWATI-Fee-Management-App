@@ -84,7 +84,7 @@
 flowchart LR
   A[Add Student] --> B((Save to LocalStorage))
   B --> C[Redirect to View Students]
-  C -- Manage --> D[Edit | Pay | Delete]
+  C -- Manage --> D[Edit / Pay / Delete]
   A -. Import Excel .-> B
   D -. Export Excel .-> E[(Download .xlsx)]
 ```
@@ -194,7 +194,7 @@ Open index.html in your browser
 
 # Option B: Serve locally (recommended for navigation)
 # Using Node (http-server)
-npx http-server . -p 8080 --cors
+px http-server . -p 8080 --cors
 # then open http://localhost:8080
 
 # Or using Python
